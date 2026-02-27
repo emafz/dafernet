@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dafer • Industria Gráfica</title>
+    <!-- Tailwind CSS para el diseño responsivo y moderno -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- AOS Animation CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        dafer: {
+                            light: '#faebfa',
+                            DEFAULT: '#A41E9E', // Nuevo color principal
+                            dark: '#6e146a', // Tono oscuro para degradados
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; overflow-x: hidden; }
+        body { overflow-x: hidden; }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        .gallery-item {
+            aspect-ratio: 4/3;
+            overflow: hidden;
+            border-radius: 0.5rem;
+            position: relative;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .gallery-item:hover img {
+            transform: scale(1.08);
+        }
+        .gallery-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(164, 30, 158, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-800 bg-gray-50 antialiased selection:bg-dafer selection:text-white">
+
+    <!-- Navegación -->
+    <header class="fixed w-full top-0 bg-white/95 backdrop-blur-sm shadow-sm z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <img src="https://www.dafernet.com.ar/images/dafer-logotipo.png" alt="Dafer Industria Gráfica" class="h-10 md:h-12 w-auto hidden" onload="this.classList.remove('hidden'); document.getElementById('header-logo-fallback').classList.add('hidden');" onerror="this.style.display='none';">
+                    <div id="header-logo-fallback" class="flex items-center">
+                        <div class="w-10 h-10 md:w-11 md:h-11 bg-dafer rounded-xl flex items-center justify-center mr-2 shadow-sm">
+                            <span class="text-white font-serif italic text-2xl md:text-3xl font-bold">d</span>
+                        </div>
+                        <div class="flex flex-col justify-center">
+                            <span class="text-3xl md:text-4xl font-bold text-gray-500 leading-none tracking-tighter" style="font-family: Arial, sans-serif;">dafer</span>
+                            <span class="text-[9px] md:text-[10px] text-dafer tracking-widest uppercase font-bold mt-0.5">Industria Gráfica</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Menú Desktop -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#empresa" class="text-gray-600 hover:text-dafer font-medium transition-colors">Empresa</a>
+                    <a href="#servicios" class="text-gray-600 hover:text-dafer font-medium transition-colors">Servicios</a>
+                    <a href="#trabajos" class="text-gray-600 hover:text-dafer font-medium transition-colors">Trabajos</a>
+                    <a href="#resenas" class="text-gray-600 hover:text-dafer font-medium transition-colors">Reseñas</a>
+                    <a href="#faq" class="text-gray-600 hover:text-dafer font-medium transition-colors">FAQ</a>
+                    <a href="#contacto" class="text-gray-600 hover:text-dafer font-medium transition-colors">Contacto</a>
+                </nav>
+
+                <!-- CTA Desktop -->
+                <div class="hidden md:flex">
+                    <a href="#contacto" class="bg-dafer hover:bg-dafer-dark text-white px-6 py-2.5 rounded-full font-medium transition-colors shadow-md shadow-dafer/30 flex items-center gap-2 transform hover:scale-105">
+                        <i data-lucide="message-square-text" class="w-4 h-4"></i> Presupuesto
+                    </a>
+                </div>
+
+                <!-- Botón Menú Móvil -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-600 hover:text-dafer focus:outline-none p-2">
+                        <i data-lucide="menu" class="w-7 h-7"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menú Móvil -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 shadow-lg absolute w-full">
+            <div class="px-4 pt-2 pb-6 space-y-1">
+                <a href="#empresa" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-dafer hover:bg-gray-50 rounded-md transition-colors">Empresa</a>
+                <a href="#servicios" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-dafer hover:bg-gray-50 rounded-md transition-colors">Servicios</a>
+                <a href="#trabajos" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-dafer hover:bg-gray-50 rounded-md transition-colors">Trabajos</a>
+                <a href="#resenas" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-dafer hover:bg-gray-50 rounded-md transition-colors">Reseñas</a>
+                <a href="#faq" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-dafer hover:bg-gray-50 rounded-md transition-colors">FAQ</a>
+                <a href="#contacto" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-dafer hover:bg-gray-50 rounded-md transition-colors">Contacto</a>
+                <a href="#contacto" class="mt-4 w-full text-center block bg-dafer text-white px-6 py-3 rounded-md font-medium shadow-md">Solicitar Presupuesto</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Slider Section -->
+    <section class="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden">
+        
+        <!-- Contenedor del Carrusel -->
+        <div id="hero-carousel" class="absolute inset-0 w-full h-full">
+            
+            <!-- Diapositiva 1 -->
+            <div class="hero-slide absolute inset-0 w-full h-full opacity-100 z-10 transition-opacity duration-1000 ease-in-out">
+                <div class="absolute inset-0 bg-gradient-to-r from-dafer-dark/90 to-dafer/70 z-10"></div>
+                <img src="https://dical.es/modules/ph_simpleblog/featured/24.jpg" alt="Máquina Offset Dafer" class="absolute inset-0 w-full h-full object-cover" />
+                
+                <div class="relative z-20 h-full flex flex-col justify-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center md:text-left pt-20">
+                    <div class="max-w-3xl" data-aos="fade-up" data-aos-duration="1000">
+                        <span class="inline-block py-1 px-3 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white text-sm font-medium mb-6 uppercase tracking-wider shadow-lg">
+                            Desde 1992 en Avellaneda
+                        </span>
+                        <h2 class="text-4xl md:text-5xl lg:text-6xl font-semibold text-white tracking-tight mb-6 leading-tight">
+                            Respuestas profesionales en <span class="text-dafer-light font-bold">comunicación gráfica</span>.
+                        </h2>
+                        <p class="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto md:mx-0 font-light">
+                            Transformamos tus ideas en efectivas herramientas de ventas con la más alta calidad de impresión y diseño.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                            <a href="#contacto" class="bg-dafer text-white hover:bg-dafer-dark px-8 py-4 rounded-full font-medium transition-all text-lg text-center shadow-[0_0_20px_rgba(164,30,158,0.5)] hover:shadow-[0_0_30px_rgba(164,30,158,0.8)] border border-dafer-light/20 transform hover:-translate-y-1">
+                                Solicitar Presupuesto
+                            </a>
+                            <a href="#servicios" class="bg-transparent border-2 border-white text-white hover:bg-white/10 px-8 py-4 rounded-full font-medium transition-all text-lg text-center flex items-center justify-center gap-2 transform hover:-translate-y-1">
+                                Ver servicios <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Diapositiva 2 -->
+            <div class="hero-slide absolute inset-0 w-full h-full opacity-0 z-0 transition-opacity duration-1000 ease-in-out">
+                <div class="absolute inset-0 bg-gradient-to-r from-gray-900/90 to-dafer-dark/80 z-10"></div>
+                <img src="https://www.cpkprinting.com/wp-content/uploads/2024/01/BLOG-OFFSET-PORTADA.webp" alt="Diseño y Pantone" class="absolute inset-0 w-full h-full object-cover" />
+                
+                <div class="relative z-20 h-full flex flex-col justify-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center md:text-left pt-20">
+                    <div class="max-w-3xl">
+                        <span class="inline-block py-1 px-3 rounded-full bg-dafer/40 backdrop-blur-md border border-dafer-light/30 text-white text-sm font-medium mb-6 uppercase tracking-wider shadow-lg">
+                            Innovación Constante
+                        </span>
+                        <h2 class="text-4xl md:text-5xl lg:text-6xl font-semibold text-white tracking-tight mb-6 leading-tight">
+                            Tecnología de vanguardia para <span class="text-dafer-light font-bold">colores perfectos</span>.
+                        </h2>
+                        <p class="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto md:mx-0 font-light">
+                            Procesos innovadores en fotocromía y maquinaria de última generación garantizan una fidelidad absoluta en cada proyecto.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                            <a href="#servicios" class="bg-white text-dafer-dark hover:bg-gray-100 px-8 py-4 rounded-full font-medium transition-all text-lg text-center shadow-lg transform hover:-translate-y-1">
+                                Conoce nuestra tecnología
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Diapositiva 3 -->
+            <div class="hero-slide absolute inset-0 w-full h-full opacity-0 z-0 transition-opacity duration-1000 ease-in-out">
+                <div class="absolute inset-0 bg-gradient-to-r from-dafer-dark/80 to-gray-900/90 z-10"></div>
+                <img src="https://www.tecnogama.com/wp-content/uploads/plotter-foto.jpg" alt="Productos Impresos" class="absolute inset-0 w-full h-full object-cover" />
+                
+                <div class="relative z-20 h-full flex flex-col justify-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center md:text-left pt-20">
+                    <div class="max-w-3xl md:ml-auto md:text-right">
+                        <span class="inline-block py-1 px-3 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white text-sm font-medium mb-6 uppercase tracking-wider shadow-lg">
+                            Impresión Digital y Offset
+                        </span>
+                        <h2 class="text-4xl md:text-5xl lg:text-6xl font-semibold text-white tracking-tight mb-6 leading-tight">
+                            Soluciones a medida para <span class="text-dafer-light font-bold">grandes y pequeños</span> volúmenes.
+                        </h2>
+                        <p class="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto md:ml-auto md:mr-0 font-light">
+                            Desde tiradas cortas urgentes hasta packaging a gran escala. Somos el aliado estratégico de tu empresa.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-end">
+                            <a href="#trabajos" class="bg-dafer text-white hover:bg-dafer-dark px-8 py-4 rounded-full font-medium transition-all text-lg text-center shadow-[0_0_20px_rgba(164,30,158,0.5)] border border-dafer-light/20 transform hover:-translate-y-1">
+                                Ver nuestros trabajos
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Controles del Carrusel -->
+        <button id="prev-slide" class="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-30 w-12 h-12 flex items-center justify-center rounded-full bg-black/20 hover:bg-dafer text-white backdrop-blur-sm border border-white/20 transition-all hover:scale-110">
+            <i data-lucide="chevron-left" class="w-6 h-6"></i>
+        </button>
+        <button id="next-slide" class="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-30 w-12 h-12 flex items-center justify-center rounded-full bg-black/20 hover:bg-dafer text-white backdrop-blur-sm border border-white/20 transition-all hover:scale-110">
+            <i data-lucide="chevron-right" class="w-6 h-6"></i>
+        </button>
+
+        <!-- Indicadores (Puntos) -->
+        <div class="absolute bottom-12 left-1/2 -translate-x-1/2 z-30 flex space-x-3">
+            <button class="slider-dot w-8 h-3 rounded-full bg-dafer transition-all duration-300 shadow-md border border-white/20"></button>
+            <button class="slider-dot w-3 h-3 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300 shadow-md border border-white/20"></button>
+            <button class="slider-dot w-3 h-3 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300 shadow-md border border-white/20"></button>
+        </div>
+    </section>
+
+    <!-- Sección Empresa -->
+    <section id="empresa" class="py-20 bg-gray-50 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div data-aos="fade-right" data-aos-duration="1000">
+                    <h3 class="text-dafer font-bold tracking-wider uppercase text-sm mb-2">Sobre Nosotros</h3>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Crecimiento sostenido desde 1992</h2>
+                    <p class="text-gray-600 mb-4 leading-relaxed">
+                        Dafer se encuentra ubicada en la ciudad de Avellaneda, en el norte de la provincia de Santa Fe. Comenzamos nuestras actividades en 1992 con una pequeña y simple máquina impresora.
+                    </p>
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        La incesante búsqueda por lograr elevar al máximo el servicio y la calidad ofrecida nos ha llevado a incorporar máquinas únicas en su tipo. Las inversiones realizadas año tras año nos han consolidado como una de las gráficas más destacadas del norte santafesino.
+                    </p>
+                    
+                    <div class="grid sm:grid-cols-2 gap-6 mt-8">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 transition-transform hover:-translate-y-1" data-aos="fade-up" data-aos-delay="100">
+                            <div class="w-12 h-12 bg-dafer-light rounded-full flex items-center justify-center mb-4">
+                                <i data-lucide="target" class="text-dafer w-6 h-6"></i>
+                            </div>
+                            <h4 class="text-xl font-bold text-gray-900 mb-2">Misión</h4>
+                            <p class="text-gray-600 text-sm">Brindar servicios de la más exigente calidad en impresión gráfica, utilizando tecnología, procesos innovadores y profesionales de excelente nivel.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 transition-transform hover:-translate-y-1" data-aos="fade-up" data-aos-delay="200">
+                            <div class="w-12 h-12 bg-dafer-light rounded-full flex items-center justify-center mb-4">
+                                <i data-lucide="eye" class="text-dafer w-6 h-6"></i>
+                            </div>
+                            <h4 class="text-xl font-bold text-gray-900 mb-2">Visión</h4>
+                            <p class="text-gray-600 text-sm">Consolidar el liderazgo en la región satisfaciendo las necesidades de comunicación gráfica, siendo nuestros productos los más calificados del mercado.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative" data-aos="fade-left" data-aos-duration="1000">
+                    <div class="rounded-2xl shadow-2xl z-10 relative overflow-hidden aspect-video w-full bg-gray-200">
+                        <iframe src="https://player.vimeo.com/video/135038051?h=2fad8fa7b3&title=0&byline=0&portrait=0" class="absolute top-0 left-0 w-full h-full" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div class="absolute -bottom-6 -right-6 w-full h-full bg-dafer rounded-2xl z-0 hidden md:block" data-aos="zoom-in" data-aos-delay="300"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Servicios -->
+    <section id="servicios" class="py-20 bg-white overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+                <h3 class="text-dafer font-bold tracking-wider uppercase text-sm mb-2">Lo que hacemos</h3>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Proveemos el mejor servicio</h2>
+                <p class="text-gray-600 text-lg">Soluciones integrales para todas las necesidades de comunicación visual de tu empresa.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Servicio 1 -->
+                <div class="group p-8 rounded-2xl bg-gray-50 hover:bg-white hover:shadow-xl transition-all duration-300 border border-transparent hover:border-gray-100 transform hover:-translate-y-2" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-14 h-14 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 group-hover:bg-dafer group-hover:text-white text-dafer transition-colors">
+                        <i data-lucide="pen-tool" class="w-7 h-7 transform group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">Diseño Gráfico</h4>
+                    <p class="text-gray-600">Nuestro equipo de profesionales realiza esta actividad creativa y técnica, transformando las ideas en una efectiva herramienta de ventas y comunicación visual.</p>
+                </div>
+
+                <!-- Servicio 2 -->
+                <div class="group p-8 rounded-2xl bg-gray-50 hover:bg-white hover:shadow-xl transition-all duration-300 border border-transparent hover:border-gray-100 transform hover:-translate-y-2" data-aos="fade-up" data-aos-delay="200">
+                    <div class="w-14 h-14 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 group-hover:bg-dafer group-hover:text-white text-dafer transition-colors">
+                        <i data-lucide="layers" class="w-7 h-7 transform group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">Impresión Offset</h4>
+                    <p class="text-gray-600">El método más utilizado por sus ventajas de altísima calidad, rapidez y bajo costo unitario. Ideal y altamente eficiente para trabajos de grandes volúmenes.</p>
+                </div>
+
+                <!-- Servicio 3 -->
+                <div class="group p-8 rounded-2xl bg-gray-50 hover:bg-white hover:shadow-xl transition-all duration-300 border border-transparent hover:border-gray-100 transform hover:-translate-y-2" data-aos="fade-up" data-aos-delay="300">
+                    <div class="w-14 h-14 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 group-hover:bg-dafer group-hover:text-white text-dafer transition-colors">
+                        <i data-lucide="zap" class="w-7 h-7 transform group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">Impresión Digital</h4>
+                    <p class="text-gray-600">En un mundo rápido y competitivo, ofrecemos esta innovación que brinda calidad superior y alto rendimiento en tiempos de entrega rápidos para tiradas cortas.</p>
+                </div>
+
+                <!-- Servicio 4 -->
+                <div class="group p-8 rounded-2xl bg-gray-50 hover:bg-white hover:shadow-xl transition-all duration-300 border border-transparent hover:border-gray-100 transform hover:-translate-y-2" data-aos="fade-up" data-aos-delay="400">
+                    <div class="w-14 h-14 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 group-hover:bg-dafer group-hover:text-white text-dafer transition-colors">
+                        <i data-lucide="image" class="w-7 h-7 transform group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">Gigantografía</h4>
+                    <p class="text-gray-600">Impresiones de gran formato para cartelería, banners, marquesinas y lonas. Logramos el máximo impacto visual para tu marca en exteriores e interiores.</p>
+                </div>
+
+                <!-- Servicio 5 -->
+                <div class="group p-8 rounded-2xl bg-gray-50 hover:bg-white hover:shadow-xl transition-all duration-300 border border-transparent hover:border-gray-100 transform hover:-translate-y-2" data-aos="fade-up" data-aos-delay="500">
+                    <div class="w-14 h-14 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 group-hover:bg-dafer group-hover:text-white text-dafer transition-colors">
+                        <i data-lucide="car" class="w-7 h-7 transform group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">Ploteo Vehicular</h4>
+                    <p class="text-gray-600">Transformamos vehículos comerciales y particulares en publicidad móvil de alto impacto utilizando vinilos vehiculares de primera calidad y durabilidad.</p>
+                </div>
+
+                <!-- Servicio 6 -->
+                <div class="group p-8 rounded-2xl bg-gray-50 hover:bg-white hover:shadow-xl transition-all duration-300 border border-transparent hover:border-gray-100 transform hover:-translate-y-2" data-aos="fade-up" data-aos-delay="600">
+                    <div class="w-14 h-14 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 group-hover:bg-dafer group-hover:text-white text-dafer transition-colors">
+                        <i data-lucide="monitor-smartphone" class="w-7 h-7 transform group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">Diseño Web</h4>
+                    <p class="text-gray-600">Llevamos tu imagen corporativa a internet. Desarrollamos sitios web para dar a conocer tu empresa, productos y servicios al mundo entero las 24 horas.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Trabajos (Portafolio) -->
+    <section id="trabajos" class="py-20 bg-gray-900 text-white overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                <div class="max-w-2xl" data-aos="fade-right">
+                    <h3 class="text-dafer-light font-bold tracking-wider uppercase text-sm mb-2">Portafolio</h3>
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Nuestros últimos trabajos</h2>
+                    <p class="text-gray-400">Una pequeña muestra de la calidad y el detalle que aplicamos a cada proyecto gráfico y de impresión.</p>
+                </div>
+                <div class="mt-6 md:mt-0 hidden md:block" data-aos="fade-left">
+                    <div class="flex gap-2">
+                        <button class="w-10 h-10 rounded-full border border-gray-700 flex items-center justify-center hover:bg-dafer hover:border-dafer transition-colors hover:scale-110 transform">
+                            <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                        </button>
+                        <button class="w-10 h-10 rounded-full border border-gray-700 flex items-center justify-center hover:bg-dafer hover:border-dafer transition-colors bg-dafer border-dafer hover:scale-110 transform">
+                            <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gallery-grid">
+                <!-- Item 1 -->
+                <div class="gallery-item bg-gray-800" data-aos="zoom-in" data-aos-delay="100">
+                    <img src="https://images.unsplash.com/photo-1586281380349-632531db7ed4?auto=format&fit=crop&q=80&w=600" alt="Diseño Editorial">
+                    <div class="gallery-overlay flex-col text-center px-4">
+                        <i data-lucide="book-open" class="w-8 h-8 mb-3 text-white"></i>
+                        <h4 class="font-bold text-lg text-white">Catálogos Comerciales</h4>
+                        <p class="text-sm text-dafer-light mt-1">Offset</p>
+                    </div>
+                </div>
+                <!-- Item 2 -->
+                <div class="gallery-item bg-gray-800" data-aos="zoom-in" data-aos-delay="200">
+                    <img src="https://images.unsplash.com/photo-1629429408209-1f912961dbd8?auto=format&fit=crop&q=80&w=600" alt="Packaging">
+                    <div class="gallery-overlay flex-col text-center px-4">
+                        <i data-lucide="box" class="w-8 h-8 mb-3 text-white"></i>
+                        <h4 class="font-bold text-lg text-white">Diseño de Packaging</h4>
+                        <p class="text-sm text-dafer-light mt-1">Offset + Troquelado</p>
+                    </div>
+                </div>
+                <!-- Item 3 -->
+                <div class="gallery-item bg-gray-800" data-aos="zoom-in" data-aos-delay="300">
+                    <img src="https://images.unsplash.com/photo-1600132806608-231446b2e7af?auto=format&fit=crop&q=80&w=600" alt="Papelería Comercial">
+                    <div class="gallery-overlay flex-col text-center px-4">
+                        <i data-lucide="file-text" class="w-8 h-8 mb-3 text-white"></i>
+                        <h4 class="font-bold text-lg text-white">Papelería Institucional</h4>
+                        <p class="text-sm text-dafer-light mt-1">Diseño e Impresión</p>
+                    </div>
+                </div>
+                <!-- Item 4 -->
+                <div class="gallery-item bg-gray-800" data-aos="zoom-in" data-aos-delay="400">
+                    <img src="https://images.unsplash.com/photo-1541462608143-67571c6738dd?auto=format&fit=crop&q=80&w=600" alt="Flyers">
+                    <div class="gallery-overlay flex-col text-center px-4">
+                        <i data-lucide="copy" class="w-8 h-8 mb-3 text-white"></i>
+                        <h4 class="font-bold text-lg text-white">Folletos Publicitarios</h4>
+                        <p class="text-sm text-dafer-light mt-1">Impresión Digital</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Staff -->
+    <section id="staff" class="py-20 bg-gray-50 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+                <h3 class="text-dafer font-bold tracking-wider uppercase text-sm mb-2">Nuestro Equipo</h3>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Personas creativas a tu disposición</h2>
+                <p class="text-gray-600 text-lg">Conoce a los profesionales encargados de hacer realidad tus proyectos.</p>
+            </div>
+
+            <!-- Grilla ajustada a 4 columnas -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center max-w-5xl mx-auto">
+                <!-- Staff 1 -->
+                <div data-aos="fade-up" data-aos-delay="100" class="group">
+                    <div class="w-24 h-24 mx-auto bg-white rounded-full shadow-md flex items-center justify-center mb-4 border-2 border-dafer-light transition-transform duration-300 group-hover:-translate-y-2 group-hover:border-dafer">
+                        <i data-lucide="user" class="w-10 h-10 text-dafer transition-transform duration-300 group-hover:scale-110"></i>
+                    </div>
+                    <h4 class="font-bold text-gray-900">Claudia Arriola</h4>
+                    <p class="text-sm text-dafer font-medium mt-1">Administración</p>
+                </div>
+                <!-- Staff 2 -->
+                <div data-aos="fade-up" data-aos-delay="200" class="group">
+                    <div class="w-24 h-24 mx-auto bg-white rounded-full shadow-md flex items-center justify-center mb-4 border-2 border-dafer-light transition-transform duration-300 group-hover:-translate-y-2 group-hover:border-dafer">
+                        <i data-lucide="user" class="w-10 h-10 text-dafer transition-transform duration-300 group-hover:scale-110"></i>
+                    </div>
+                    <h4 class="font-bold text-gray-900">Osvaldo Fernandez</h4>
+                    <p class="text-sm text-dafer font-medium mt-1">Administración</p>
+                </div>
+                <!-- Staff 3 -->
+                <div data-aos="fade-up" data-aos-delay="300" class="group">
+                    <div class="w-24 h-24 mx-auto bg-white rounded-full shadow-md flex items-center justify-center mb-4 border-2 border-dafer-light transition-transform duration-300 group-hover:-translate-y-2 group-hover:border-dafer">
+                        <i data-lucide="pen-tool" class="w-10 h-10 text-dafer transition-transform duration-300 group-hover:scale-110"></i>
+                    </div>
+                    <h4 class="font-bold text-gray-900">Camila Fernandez</h4>
+                    <p class="text-sm text-dafer font-medium mt-1">Diseño Gráfico y Gigantografía</p>
+                </div>
+                <!-- Staff 4 -->
+                <div data-aos="fade-up" data-aos-delay="400" class="group">
+                    <div class="w-24 h-24 mx-auto bg-white rounded-full shadow-md flex items-center justify-center mb-4 border-2 border-dafer-light transition-transform duration-300 group-hover:-translate-y-2 group-hover:border-dafer">
+                        <i data-lucide="printer" class="w-10 h-10 text-dafer transition-transform duration-300 group-hover:scale-110"></i>
+                    </div>
+                    <h4 class="font-bold text-gray-900">Ignacio Fernandez</h4>
+                    <p class="text-sm text-dafer font-medium mt-1">Ploteo y Gigantografía</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Reseñas -->
+    <section id="resenas" class="py-20 bg-white overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+                <h3 class="text-dafer font-bold tracking-wider uppercase text-sm mb-2">Testimonios</h3>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Lo que dicen nuestros clientes</h2>
+                <p class="text-gray-600 text-lg">Reseñas reales de quienes confían en nuestro trabajo cada día en Google Maps.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Reseña 1 -->
+                <div class="bg-gray-50 p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-shadow duration-300" data-aos="flip-up" data-aos-delay="100">
+                    <div class="flex items-center gap-4 mb-5">
+                        <div class="w-12 h-12 bg-[#673ab7] rounded-full text-white flex items-center justify-center font-bold text-xl flex-shrink-0">E</div>
+                        <div>
+                            <h4 class="font-bold text-gray-900 leading-tight">Eliano Buyatti</h4>
+                            <p class="text-xs text-gray-500 mt-1">Local Guide · 233 opiniones · 220 fotos</p>
+                        </div>
+                    </div>
+                    <div class="flex text-yellow-400 mb-3 gap-1">
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                    </div>
+                    <p class="text-gray-700 font-medium mb-4">"Muy buenos diseños excelente!!!"</p>
+                    <p class="text-xs text-gray-400">Editado Hace 7 años</p>
+                </div>
+
+                <!-- Reseña 2 -->
+                <div class="bg-gray-50 p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-shadow duration-300" data-aos="flip-up" data-aos-delay="200">
+                    <div class="flex items-center gap-4 mb-5">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80" alt="Mara Paduan" class="w-12 h-12 rounded-full object-cover flex-shrink-0">
+                        <div>
+                            <h4 class="font-bold text-gray-900 leading-tight">Mara Paduan</h4>
+                            <p class="text-xs text-gray-500 mt-1">Local Guide · 146 opiniones · 91 fotos</p>
+                        </div>
+                    </div>
+                    <div class="flex text-yellow-400 mb-3 gap-1">
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                    </div>
+                    <p class="text-gray-700 font-medium mb-4">"Cálida atención y buen asesoramiento"</p>
+                    <p class="text-xs text-gray-400">Hace 2 años</p>
+                </div>
+
+                <!-- Reseña 3 -->
+                <div class="bg-gray-50 p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-shadow duration-300" data-aos="flip-up" data-aos-delay="300">
+                    <div class="flex items-center gap-4 mb-5">
+                        <div class="w-12 h-12 bg-[#c84c2a] rounded-full text-white flex items-center justify-center font-bold text-xl flex-shrink-0">J</div>
+                        <div>
+                            <h4 class="font-bold text-gray-900 leading-tight">Jose Oliva</h4>
+                            <p class="text-xs text-gray-500 mt-1">1 opinión</p>
+                        </div>
+                    </div>
+                    <div class="flex text-yellow-400 mb-3 gap-1">
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                    </div>
+                    <p class="text-gray-700 font-medium mb-4">"Muy bueno"</p>
+                    <p class="text-xs text-gray-400">Hace 11 años</p>
+                </div>
+            </div>
+            
+            <div class="text-center mt-10" data-aos="fade-up" data-aos-delay="400">
+                <a href="#" class="inline-flex items-center gap-2 text-dafer font-bold hover:text-dafer-dark transition-colors transform hover:translate-x-1">
+                    <i data-lucide="external-link" class="w-4 h-4"></i> Ver todas las opiniones en Google
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Preguntas Frecuentes -->
+    <section id="faq" class="py-20 bg-gray-50 overflow-hidden">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h3 class="text-dafer font-bold tracking-wider uppercase text-sm mb-2">Ayuda</h3>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Preguntas Frecuentes</h2>
+                <p class="text-gray-600 text-lg">Resolvemos tus dudas principales para agilizar tus pedidos y cotizaciones.</p>
+            </div>
+
+            <div class="space-y-4">
+                <!-- Pregunta 1 -->
+                <details class="group bg-white rounded-xl shadow-sm border border-gray-100 open:border-dafer-light transition-all duration-300" data-aos="fade-up" data-aos-delay="100">
+                    <summary class="flex justify-between items-center font-semibold cursor-pointer list-none [&::-webkit-details-marker]:hidden p-6 text-gray-900 hover:text-dafer text-lg">
+                        <span>¿Qué tipos de archivos aceptan para imprimir?</span>
+                        <span class="transition-transform duration-300 group-open:rotate-180 text-dafer">
+                            <i data-lucide="chevron-down" class="w-5 h-5"></i>
+                        </span>
+                    </summary>
+                    <div class="text-gray-600 px-6 pb-6 pt-0 leading-relaxed border-t border-gray-50 mt-2 pt-4">
+                        Preferimos recibir los archivos en formato <strong>PDF</strong> de alta calidad. Si trabajas con Adobe Illustrator o CorelDraw, por favor recuerda <strong>convertir todas las tipografías a curvas</strong> y verificar que las imágenes estén incrustadas en paleta CMYK a 300dpi.
+                    </div>
+                </details>
+
+                <!-- Pregunta 2 -->
+                <details class="group bg-white rounded-xl shadow-sm border border-gray-100 open:border-dafer-light transition-all duration-300" data-aos="fade-up" data-aos-delay="200">
+                    <summary class="flex justify-between items-center font-semibold cursor-pointer list-none [&::-webkit-details-marker]:hidden p-6 text-gray-900 hover:text-dafer text-lg">
+                        <span>¿Cuáles son los tiempos promedio de entrega?</span>
+                        <span class="transition-transform duration-300 group-open:rotate-180 text-dafer">
+                            <i data-lucide="chevron-down" class="w-5 h-5"></i>
+                        </span>
+                    </summary>
+                    <div class="text-gray-600 px-6 pb-6 pt-0 leading-relaxed border-t border-gray-50 mt-2 pt-4">
+                        Los tiempos varían según la complejidad del proyecto. Para la <strong>impresión digital</strong> suele ser entre 24 y 48 horas. Para proyectos en <strong>impresión offset</strong> o <strong>gigantografías y ploteo</strong>, los plazos van de 5 a 7 días hábiles tras la aprobación del diseño.
+                    </div>
+                </details>
+
+                <!-- Pregunta 3 -->
+                <details class="group bg-white rounded-xl shadow-sm border border-gray-100 open:border-dafer-light transition-all duration-300" data-aos="fade-up" data-aos-delay="300">
+                    <summary class="flex justify-between items-center font-semibold cursor-pointer list-none [&::-webkit-details-marker]:hidden p-6 text-gray-900 hover:text-dafer text-lg">
+                        <span>¿Hacen envíos a otras ciudades?</span>
+                        <span class="transition-transform duration-300 group-open:rotate-180 text-dafer">
+                            <i data-lucide="chevron-down" class="w-5 h-5"></i>
+                        </span>
+                    </summary>
+                    <div class="text-gray-600 px-6 pb-6 pt-0 leading-relaxed border-t border-gray-50 mt-2 pt-4">
+                        ¡Sí! Ubicados en Avellaneda (Santa Fe), realizamos envíos seguros y rápidos a toda la región del norte santafesino, provincias aledañas y al resto del país a través de correos y expresos de confianza.
+                    </div>
+                </details>
+
+                <!-- Pregunta 4 -->
+                <details class="group bg-white rounded-xl shadow-sm border border-gray-100 open:border-dafer-light transition-all duration-300" data-aos="fade-up" data-aos-delay="400">
+                    <summary class="flex justify-between items-center font-semibold cursor-pointer list-none [&::-webkit-details-marker]:hidden p-6 text-gray-900 hover:text-dafer text-lg">
+                        <span>¿Hay una cantidad mínima para realizar un pedido?</span>
+                        <span class="transition-transform duration-300 group-open:rotate-180 text-dafer">
+                            <i data-lucide="chevron-down" class="w-5 h-5"></i>
+                        </span>
+                    </summary>
+                    <div class="text-gray-600 px-6 pb-6 pt-0 leading-relaxed border-t border-gray-50 mt-2 pt-4">
+                        Para la tecnología de <strong>Impresión Digital</strong> no tenemos cantidad mínima, podés imprimir desde 1 unidad (ideal para tiradas cortas). Para trabajos en <strong>Offset</strong> (por ej. folletería, revistas, packaging), la rentabilidad requiere de tiradas estándar de 1000 unidades o más.
+                    </div>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Instagram -->
+    <section id="instagram" class="py-20 bg-dafer-light/20 border-y border-dafer-light/50 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Encabezado de Instagram -->
+            <div class="flex flex-col sm:flex-row justify-between items-center mb-10 gap-6" data-aos="fade-up">
+                <div class="flex items-center gap-4">
+                    <!-- Foto de Perfil con borde de historia IG -->
+                    <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] p-[3px] flex-shrink-0 shadow-lg transform hover:scale-105 transition-transform">
+                        <div class="bg-white rounded-full p-[2px] w-full h-full">
+                            <div class="w-full h-full bg-dafer rounded-full flex items-center justify-center">
+                                <i data-lucide="printer" class="text-white w-8 h-8"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight">Síguenos en Instagram</h2>
+                        <a href="https://www.instagram.com/dafer.imprenta/" target="_blank" class="text-dafer font-semibold text-lg hover:text-dafer-dark transition-colors inline-flex items-center gap-1 mt-1">
+                            @dafer.imprenta
+                        </a>
+                    </div>
+                </div>
+                <a href="https://www.instagram.com/dafer.imprenta/" target="_blank" class="bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045] hover:opacity-90 text-white px-8 py-3 rounded-full font-bold transition-all shadow-lg flex items-center gap-2 transform hover:-translate-y-1 hover:shadow-xl">
+                    <i data-lucide="instagram" class="w-5 h-5"></i> Seguir cuenta
+                </a>
+            </div>
+
+            <!-- Grilla de Fotos (Feed Simulado) -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 md:gap-4">
+                
+                <!-- Post 1 -->
+                <a href="https://www.instagram.com/dafer.imprenta/" target="_blank" class="group relative aspect-square bg-gray-200 overflow-hidden rounded-xl block" data-aos="zoom-in" data-aos-delay="100">
+                    <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=400&q=80" alt="Post Instagram Dafer" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4 text-white">
+                        <div class="flex items-center gap-1 font-bold"><i data-lucide="heart" class="w-5 h-5 fill-white"></i> 124</div>
+                        <div class="flex items-center gap-1 font-bold"><i data-lucide="message-circle" class="w-5 h-5 fill-white"></i> 12</div>
+                    </div>
+                </a>
+
+                <!-- Post 2 -->
+                <a href="https://www.instagram.com/dafer.imprenta/" target="_blank" class="group relative aspect-square bg-gray-200 overflow-hidden rounded-xl block" data-aos="zoom-in" data-aos-delay="200">
+                    <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=400&q=80" alt="Post Instagram Dafer" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4 text-white">
+                        <div class="flex items-center gap-1 font-bold"><i data-lucide="heart" class="w-5 h-5 fill-white"></i> 89</div>
+                        <div class="flex items-center gap-1 font-bold"><i data-lucide="message-circle" class="w-5 h-5 fill-white"></i> 5</div>
+                    </div>
+                </a>
+
+                <!-- Post 3 -->
+                <a href="https://www.instagram.com/dafer.imprenta/" target="_blank" class="group relative aspect-square bg-gray-200 overflow-hidden rounded-xl block" data-aos="zoom-in" data-aos-delay="300">
+                    <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=400&q=80" alt="Post Instagram Dafer" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4 text-white">
+                        <div class="flex items-center gap-1 font-bold"><i data-lucide="heart" class="w-5 h-5 fill-white"></i> 210</div>
+                        <div class="flex items-center gap-1 font-bold"><i data-lucide="message-circle" class="w-5 h-5 fill-white"></i> 18</div>
+                    </div>
+                </a>
+
+                <!-- Post 4 -->
+                <a href="https://www.instagram.com/dafer.imprenta/" target="_blank" class="group relative aspect-square bg-gray-200 overflow-hidden rounded-xl block" data-aos="zoom-in" data-aos-delay="400">
+                    <img src="https://images.unsplash.com/photo-1634942537034-2531766767d1?auto=format&fit=crop&w=400&q=80" alt="Post Instagram Dafer" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4 text-white">
+                        <div class="flex items-center gap-1 font-bold"><i data-lucide="heart" class="w-5 h-5 fill-white"></i> 156</div>
+                        <div class="flex items-center gap-1 font-bold"><i data-lucide="message-circle" class="w-5 h-5 fill-white"></i> 8</div>
+                    </div>
+                </a>
+
+                <!-- Post 5 -->
+                <a href="https://www.instagram.com/dafer.imprenta/" target="_blank" class="group relative aspect-square bg-gray-200 overflow-hidden rounded-xl hidden md:block" data-aos="zoom-in" data-aos-delay="500">
+                    <img src="https://images.unsplash.com/photo-1586281380349-632531db7ed4?auto=format&fit=crop&w=400&q=80" alt="Post Instagram Dafer" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4 text-white">
+                        <div class="flex items-center gap-1 font-bold"><i data-lucide="heart" class="w-5 h-5 fill-white"></i> 342</div>
+                        <div class="flex items-center gap-1 font-bold"><i data-lucide="message-circle" class="w-5 h-5 fill-white"></i> 24</div>
+                    </div>
+                </a>
+
+                <!-- Post 6 -->
+                <a href="https://www.instagram.com/dafer.imprenta/" target="_blank" class="group relative aspect-square bg-gray-200 overflow-hidden rounded-xl hidden md:block" data-aos="zoom-in" data-aos-delay="600">
+                    <img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=400&q=80" alt="Post Instagram Dafer" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4 text-white">
+                        <div class="flex items-center gap-1 font-bold"><i data-lucide="heart" class="w-5 h-5 fill-white"></i> 115</div>
+                        <div class="flex items-center gap-1 font-bold"><i data-lucide="message-circle" class="w-5 h-5 fill-white"></i> 3</div>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Ubicación (Mapa) -->
+    <section class="w-full h-[400px] md:h-[450px] bg-gray-200 relative border-b border-gray-200" data-aos="fade-in" data-aos-duration="1200">
+        <iframe 
+            src="https://maps.google.com/maps?q=Dafer%20Industria%20Grafica%2C%20Calle%2013%20825%2C%20Avellaneda%2C%20Santa%20Fe&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+            width="100%" 
+            height="100%" 
+            style="border:0;" 
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Mapa de ubicación Dafer Industria Gráfica">
+        </iframe>
+    </section>
+
+    <!-- Sección Contacto -->
+    <section id="contacto" class="py-20 bg-white overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-dafer-dark rounded-3xl overflow-hidden shadow-2xl">
+                <div class="grid lg:grid-cols-2">
+                    <!-- Info Contacto -->
+                    <div class="p-10 md:p-16 text-white bg-dafer-dark relative overflow-hidden" data-aos="fade-right" data-aos-duration="800">
+                        <!-- Abstract bg shapes -->
+                        <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-white opacity-5 blur-3xl"></div>
+                        <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-dafer opacity-50 blur-3xl"></div>
+                        
+                        <div class="relative z-10">
+                            <h2 class="text-3xl font-bold mb-8">Ponte en contacto</h2>
+                            <p class="text-dafer-light mb-10 text-lg">Solicita un presupuesto sin cargo o envíanos tus sugerencias. Estamos listos para asesorarte.</p>
+                            
+                            <div class="space-y-8">
+                                <div class="flex items-start group">
+                                    <div class="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center flex-shrink-0 mr-4 transition-transform group-hover:scale-110">
+                                        <i data-lucide="map-pin" class="w-6 h-6 text-white"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-lg">Dirección</h4>
+                                        <p class="text-dafer-light transition-colors group-hover:text-white">Calle 13 Nº 825<br>(3561) Avellaneda - Santa Fe<br>Argentina</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start group">
+                                    <div class="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center flex-shrink-0 mr-4 transition-transform group-hover:scale-110">
+                                        <i data-lucide="phone" class="w-6 h-6 text-white"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-lg">Teléfonos</h4>
+                                        <p class="text-dafer-light transition-colors group-hover:text-white">Telefax: (03482) 480146<br>Cel: (03482) 15520613</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start group">
+                                    <div class="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center flex-shrink-0 mr-4 transition-transform group-hover:scale-110">
+                                        <i data-lucide="mail" class="w-6 h-6 text-white"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-lg">Correos Directos</h4>
+                                        <div class="text-dafer-light text-sm mt-1 space-y-2 transition-colors group-hover:text-white">
+                                            <p><span class="text-white font-medium">Administración:</span><br>info@dafernet.com.ar<br>osvaldo.fernandez@dafernet.com.ar<br>claudia.arriola@dafernet.com.ar</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Formulario -->
+                    <div class="p-10 md:p-16 bg-white" data-aos="fade-left" data-aos-duration="800">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-6">Envíanos un mensaje</h3>
+                        
+                        <div id="form-success" class="hidden bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6 flex items-start">
+                            <i data-lucide="check-circle" class="w-5 h-5 mr-3 mt-0.5 flex-shrink-0"></i>
+                            <div>
+                                <p class="font-bold">¡Mensaje enviado correctamente!</p>
+                                <p class="text-sm">Gracias por contactarnos. Te responderemos a la brevedad.</p>
+                            </div>
+                        </div>
+
+                        <form id="contact-form" class="space-y-5">
+                            <div>
+                                <label for="nombre" class="block text-sm font-medium text-gray-700 mb-1">Nombre completo *</label>
+                                <input type="text" id="nombre" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-dafer focus:border-dafer outline-none transition-colors bg-gray-50 focus:bg-white" placeholder="Ej. Juan Pérez">
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div>
+                                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+                                    <input type="email" id="email" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-dafer focus:border-dafer outline-none transition-colors bg-gray-50 focus:bg-white" placeholder="tunombre@email.com">
+                                </div>
+                                <div>
+                                    <label for="telefono" class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+                                    <input type="tel" id="telefono" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-dafer focus:border-dafer outline-none transition-colors bg-gray-50 focus:bg-white" placeholder="Tu número">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label for="mensaje" class="block text-sm font-medium text-gray-700 mb-1">Mensaje o Presupuesto *</label>
+                                <textarea id="mensaje" rows="4" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-dafer focus:border-dafer outline-none transition-colors bg-gray-50 focus:bg-white resize-none" placeholder="Escribe aquí los detalles de tu consulta..."></textarea>
+                            </div>
+                            
+                            <button type="submit" id="submit-btn" class="w-full bg-dafer hover:bg-dafer-dark text-white font-bold py-4 rounded-lg transition-all flex justify-center items-center gap-2 transform hover:-translate-y-1 hover:shadow-lg">
+                                <span>Enviar Mensaje</span>
+                                <i data-lucide="send" class="w-4 h-4"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-12 border-t border-gray-800" data-aos="fade-up" data-aos-duration="600">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center cursor-pointer transform hover:scale-105 transition-transform" onclick="window.scrollTo(0,0)">
+                <div>
+                    <img src="https://www.dafernet.com.ar/images/dafer-logotipo.png" alt="Dafer Industria Gráfica" class="h-8 w-auto hidden brightness-0 invert" onload="this.classList.remove('hidden'); document.getElementById('footer-logo-fallback').classList.add('hidden');" onerror="this.style.display='none';">
+                    <div id="footer-logo-fallback" class="flex items-center">
+                        <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-2 border-2 border-white">
+                            <span class="text-white font-serif italic text-xl font-bold">d</span>
+                        </div>
+                        <div class="flex flex-col justify-center">
+                            <span class="text-2xl font-bold text-white leading-none tracking-tighter" style="font-family: Arial, sans-serif;">dafer</span>
+                            <span class="text-[7.5px] text-white tracking-widest uppercase font-bold mt-0.5">Industria Gráfica</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center md:text-left text-sm">
+                &copy; <span id="current-year"></span> Dafer Industria Gráfica. Todos los derechos reservados.
+            </div>
+            
+            <div class="flex space-x-4">
+                <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-dafer hover:text-white transition-all transform hover:-translate-y-1 hover:shadow-lg">
+                    <i data-lucide="facebook" class="w-5 h-5"></i>
+                </a>
+                <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-dafer hover:text-white transition-all transform hover:-translate-y-1 hover:shadow-lg">
+                    <i data-lucide="instagram" class="w-5 h-5"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Botón Flotante WhatsApp -->
+    <a href="#" target="_blank" class="fixed bottom-6 right-6 bg-[#25D366] text-white p-4 rounded-full shadow-lg shadow-green-500/30 hover:-translate-y-2 hover:shadow-xl transition-all duration-300 z-50 flex items-center justify-center group">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+        <span class="absolute right-14 bg-white text-gray-800 text-sm font-semibold py-1 px-3 rounded-lg shadow-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap hidden sm:block">
+            ¡Chatea con nosotros!
+        </span>
+    </a>
+
+    <!-- AOS Animation JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Scripts -->
+    <script>
+        // Inicializar animaciones de Scroll (AOS)
+        AOS.init({
+            duration: 800,     // duración de la animación en ms
+            once: true,        // animar solo la primera vez que se hace scroll hacia abajo
+            offset: 50,        // offset en px antes de activar la animación
+            easing: 'ease-out-cubic', // curva de aceleración suave
+        });
+
+        // Inicializar iconos de Lucide
+        lucide.createIcons();
+
+        // Actualizar año del copyright
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Funcionalidad Menú Móvil
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        const mobileLinks = menu.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.add('hidden');
+            });
+        });
+
+        // --- LÓGICA DEL CARRUSEL (HERO SLIDER) ---
+        const slides = document.querySelectorAll('.hero-slide');
+        const dots = document.querySelectorAll('.slider-dot');
+        const prevBtn = document.getElementById('prev-slide');
+        const nextBtn = document.getElementById('next-slide');
+        let currentSlide = 0;
+        let slideInterval;
+
+        function goToSlide(n) {
+            // Ocultar slide actual
+            slides[currentSlide].classList.remove('opacity-100', 'z-10');
+            slides[currentSlide].classList.add('opacity-0', 'z-0');
+            // Desactivar dot actual
+            dots[currentSlide].classList.remove('bg-dafer', 'w-8');
+            dots[currentSlide].classList.add('bg-white/50', 'w-3');
+
+            // Calcular nuevo índice
+            currentSlide = (n + slides.length) % slides.length;
+
+            // Mostrar nuevo slide
+            slides[currentSlide].classList.remove('opacity-0', 'z-0');
+            slides[currentSlide].classList.add('opacity-100', 'z-10');
+            // Activar nuevo dot
+            dots[currentSlide].classList.remove('bg-white/50', 'w-3');
+            dots[currentSlide].classList.add('bg-dafer', 'w-8');
+        }
+
+        function nextSlide() { goToSlide(currentSlide + 1); }
+        function prevSlide() { goToSlide(currentSlide - 1); }
+
+        function startSlideShow() {
+            slideInterval = setInterval(nextSlide, 5000); // Cambia cada 5 segundos
+        }
+
+        function resetInterval() {
+            clearInterval(slideInterval);
+            startSlideShow();
+        }
+
+        // Eventos de controles manuales
+        nextBtn.addEventListener('click', () => { nextSlide(); resetInterval(); });
+        prevBtn.addEventListener('click', () => { prevSlide(); resetInterval(); });
+        
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                goToSlide(index);
+                resetInterval();
+            });
+        });
+
+        // Iniciar el auto-play
+        startSlideShow();
+        // ----------------------------------------
+
+
+        // Simulación de envío de formulario
+        const form = document.getElementById('contact-form');
+        const successMsg = document.getElementById('form-success');
+        const submitBtn = document.getElementById('submit-btn');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault(); 
+            
+            const originalBtnHtml = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Enviando...';
+            lucide.createIcons();
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-70');
+
+            setTimeout(() => {
+                form.reset();
+                form.classList.add('hidden');
+                successMsg.classList.remove('hidden');
+                
+                submitBtn.innerHTML = originalBtnHtml;
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-70');
+                
+                setTimeout(() => {
+                    successMsg.classList.add('hidden');
+                    form.classList.remove('hidden');
+                    lucide.createIcons();
+                }, 5000);
+                
+            }, 1500);
+        });
+
+        // Cambio de estilo del Header al scrollear
+        const header = document.querySelector('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+                header.classList.add('shadow-md');
+                header.classList.remove('shadow-sm');
+            } else {
+                header.classList.remove('shadow-md');
+                header.classList.add('shadow-sm');
+            }
+        });
+    </script>
+</body>
+</html>
+```
